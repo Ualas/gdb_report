@@ -11,6 +11,7 @@ DBHOST = os.getenv('DBHOST')
 DBPASS = os.getenv('DBPASS')
 dbtables = []
 data = []
+fields_data = []
 
 con = psycopg2.connect(database='ir_rio', user=DBUSER, password=DBPASS, host=DBHOST, port='5432')
 
@@ -23,20 +24,20 @@ for row in rows:
     dbtables.append({"schema" : row[0], "table" : row[1]})
 
 df_dbtables = pd.DataFrame(dbtables)
+cur = con.cursor()
 
 for index, row in df_dbtables.iterrows():
     try:
-        schema_table = row['schema'] + '.' + row['table']
-        cur.execute("""SELECT type,stylename FROM %s""" % schema_table)
-        rows = cur.fetchall()
-        for row in rows:
-            data.append({"Table" : schema_table ,"Type" : row[0], "Stylename" : row[1]})
-        cur.execute("""SELECT type,stylename FROM %s""" % schema_table)
-        rows = cur.fetchall()
-    except:
-        continue
+        schema_table = row['schema'] + "." + row['table']
+        cur.execute("SELECT type,stylename FROM %s" % schema_table)
+        rs = cur.fetchall()
+        for r in rs:
+            data.append({"Table" : schema_table, "Type" : r[0], "Stylename" : r[1]})
+    #except psycopg2.OperationalError: traceback.print_exc()
+    except: continue
+
 con.close()
 
 df = pd.DataFrame(data, columns=['Table', 'Type', 'Stylename'])
 pt = pd.pivot_table(df,index=["Table","Type","Stylename"], aggfunc=len) #FIX ISSUE HERE
-print(pt)
+pprint(df)
