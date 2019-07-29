@@ -9,11 +9,10 @@ load_dotenv()
 DBUSER = os.getenv('DBUSER')
 DBHOST = os.getenv('DBHOST')
 DBPASS = os.getenv('DBPASS')
-dbtables = []
-data = []
-fields_data = []
 
-def getData():
+def getData(report):
+    data = []
+    dbtables = []
     con = psycopg2.connect(database='ir_rio', user=DBUSER, password=DBPASS, host=DBHOST, port='5432')
 
     con.set_client_encoding('UTF8')
@@ -29,13 +28,21 @@ def getData():
 
     for index, row in df_dbtables.iterrows():
         try:
-            schema_table = row['schema'] + "." + row['table']
-            cur.execute("SELECT type,stylename FROM %s GROUP BY type,stylename" % schema_table)
-            rs = cur.fetchall()
-            for r in rs:
-                data.append({"Table" : row['table'][:-4], "Type" : r[0], "Stylename" : r[1]})
-        #except psycopg2.OperationalError: traceback.print_exc()
+            if report == 'styles':
+                schema_table = row['schema'] + "." + row['table']
+                cur.execute("SELECT type,stylename,COUNT(objectid) FROM %s GROUP BY type,stylename" % schema_table)
+                rs = cur.fetchall()
+                for r in rs:
+                    data.append({"Table" : row['table'][:-4], "Type" : r[0], "Stylename" : r[1], "Count" : r[2]})
+            elif report == 'layers':
+                table = row['table']
+                schema = row['schema']
+                cur.execute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '%s' AND table_schema = '%s'" % (table, schema))
+                rs = cur.fetchall()
+                for r in rs:
+                    data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
         except: continue
+        #except psycopg2.OperationalError: traceback.print_exc()
     con.close()
     return(data)
 

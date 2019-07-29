@@ -7,11 +7,16 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    data = getData()
-    df = pd.DataFrame(data, columns=['Table','Type', 'Stylename'])
-    df.set_index(['Table','Type'], inplace=True)
-    return render_template('view.html',tables=[df.to_html(classes='Type')],
-    titles = ['Types'])
+    layers_data = getData("layers")
+    layers_df = pd.DataFrame(layers_data, columns=['Table','Field', 'Type'])
+    layers_df.set_index(['Table'], inplace=True)
+
+    styles_data = getData("styles")
+    styles_df = pd.DataFrame(styles_data, columns=['Table','Type', 'Stylename', 'Count'])
+    styles_df.set_index(['Table'], inplace=True)
+
+    return render_template('view.html',tables=[styles_df.to_html(classes='Type')],
+    titles = ['Type'])
 
 if __name__ == "__main__":
     app.run(debug=True)
