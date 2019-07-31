@@ -1,9 +1,15 @@
 <!doctype html>
 <title>Simple tables</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-<div class=page>
-  {% for table in tables %}
-    <h2>{{titles[loop.index]}}</h2>
-    {{ table|safe }}
-  {% endfor %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<center><h1>Quality Assurance Report</h1></center>
+<div class="container">
+  <div class="row">
+    {% for table in tables %}
+    <div class="col">
+      <center><h2>{{titles[loop.index]}}</h2></center>
+      {{ table|safe }}
+    </div>
+    {% endfor %}
+  </div>
 </div>

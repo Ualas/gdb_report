@@ -15,8 +15,8 @@ def index():
     styles_df = pd.DataFrame(styles_data, columns=['Table','Type', 'Stylename', 'Count'])
     styles_df.set_index(['Table'], inplace=True)
 
-    return render_template('view.html',tables=[styles_df.to_html(classes='Type')],
-    titles = ['Type'])
+    return render_template('view.html',tables=[styles_df.to_html(classes='styles'),layers_df.to_html(classes='layers')],
+    titles = ['na','Attributes','Fields'])
 
 if __name__ == "__main__":
     app.run(debug=True)
