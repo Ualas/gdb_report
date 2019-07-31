@@ -27,23 +27,25 @@ def getData(report):
     cur = con.cursor()
 
     for index, row in df_dbtables.iterrows():
+        table = row['table']
+        schema = row['schema']
+        schema_table = schema + "." + table
         try:
-            if report == 'styles':
-                schema_table = row['schema'] + "." + row['table']
-                cur.execute("SELECT type,stylename,COUNT(objectid) FROM %s GROUP BY type,stylename" % schema_table)
-                rs = cur.fetchall()
-                for r in rs:
-                    data.append({"Table" : row['table'][:-4], "Type" : r[0], "Stylename" : r[1], "Count" : r[2]})
+            if (report == 'styles'):
+                if not ("extent" in table or "cone" in table):
+                    cur.execute("SELECT type,stylename,COUNT(objectid) FROM %s GROUP BY type,stylename" % schema_table)
+                    rs = cur.fetchall()
+                    for r in rs:
+                        data.append({"Table" : row['table'][:-4], "Type" : r[0], "Stylename" : r[1], "Count" : r[2]})
             elif report == 'layers':
-                table = row['table']
-                schema = row['schema']
                 cur.execute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '%s' AND table_schema = '%s'" % (table, schema))
                 rs = cur.fetchall()
                 for r in rs:
                     data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
-        except: continue
-        #except psycopg2.OperationalError: traceback.print_exc()
+        #except: continue
+        except psycopg2.OperationalError: traceback.print_exc()
     con.close()
+    #pprint(data)
     return(data)
 
 #df = pd.DataFrame(data, columns=['Table', 'Type', 'Stylename'])
