@@ -69,7 +69,7 @@ def index():
 
     disconnectDB(con)
 
-    return render_template('table.html',data=styles_data, columns=styles_columns, title='Table', databases=databases_data)
+    return render_template('table.html',data=styles_data, columns=styles_columns, layers_data=layers_data ,layers_columns=layers_columns, databases=databases_data)
 
 if __name__ == "__main__":
     app.run(debug=True)

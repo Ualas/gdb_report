@@ -30,6 +30,16 @@
         });
       });
     });
+    $(window).load(function(){
+      var layers_data = {{layers_data|tojson}};
+      var layers_columns = {{layers_columns|tojson}};
+      $(function() {
+        $('#layers_table').bootstrapTable({
+          data: layers_data,
+          columns: layers_columns,
+        });
+      });
+    });
   </script>
 </head>
 <body>
@@ -40,17 +50,48 @@
       <button type="button" class="btn btn-outline-info" onclick="window.location.href = '/?db={{ database | safe }}';">{{ database | safe }}</button>
       {% endfor %}
     </div>
-    <br/>
-    <div id="toolbar"></div>
-    <table
-      id="table"
-      data-toggle="true"
-      data-toolbar="#toolbar"
-      data-search="true"
-      data-show-columns="true"
-      data-pagination="false"
-      data-height="500">
-    </table>
+
+<p>
+  <button class="btn btn-info btn-lg" type="button" data-toggle="collapse" data-target="#multiCollapseExample1" aria-expanded="false" aria-controls="multiCollapseExample1">Attributes</button>
+  <button class="btn btn-info btn-lg" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Fields</button>
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+      <div class="card card-body">
+        <div id="toolbar"></div>
+          <table
+            id="table"
+            data-toggle="true"
+            data-toolbar="#toolbar"
+            data-search="true"
+            data-show-columns="true"
+            data-pagination="false"
+            data-height="500">
+          </table>
+      </div>
+    </div>
   </div>
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample2">
+      <div class="card card-body">
+        <div id="toolbar"></div>
+          <table
+            id="layers_table"
+            data-toggle="true"
+            data-toolbar="#toolbar"
+            data-search="true"
+            data-show-columns="true"
+            data-pagination="false"
+            data-height="500">
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
 </body>
 </html>
