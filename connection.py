@@ -27,7 +27,7 @@ def getData(con,report):
         cur.execute("SELECT datname FROM pg_database WHERE datistemplate = false and datname != 'postgres';")
         rows = cur.fetchall()
         for row in rows:
-            data.append({row[0]})
+            data.append(row[0])
     else:
         cur.execute("SELECT schemaname,viewname FROM pg_catalog.pg_views WHERE viewname LIKE '%evw'")
         rows = cur.fetchall()

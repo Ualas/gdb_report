@@ -57,6 +57,7 @@ def index():
     con = connectionDB(dbname)
 
     databases_data = getData(con,"databases")
+    pprint(databases_data)
 
     layers_data = getData(con,"layers")
     layers_df = pd.DataFrame(layers_data, columns=['Table','Field', 'Type'])

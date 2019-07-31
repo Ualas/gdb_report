@@ -34,10 +34,12 @@
 </head>
 <body>
   <div class="container" style="padding: 10px; ">
-    <h1>{{title}}</h1>
-    {% for database in databases %}
-      <a>{{ database|safe }}</a><br>
-    {% endfor %}
+    <div class="row">
+      <center><h1>Quality Assurance Report</h1></center>
+      {% for database in databases %}
+      <button type="button" class="btn btn-outline-info" onclick="window.location.href = '/?db={{ database | safe }}';">{{ database | safe }}</button>
+      {% endfor %}
+    </div>
     <br/>
     <div id="toolbar"></div>
     <table
