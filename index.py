@@ -16,29 +16,29 @@ layers_columns = [
 },
   {
     "field": "Field", # which is the field's name of data key
-    "title": "Field", # display as the table header's name
+    "title": "F. Name", # display as the table header's name
     "sortable": True,
   },
   {
     "field": "Type",
-    "title": "Type",
+    "title": "F. Type",
     "sortable": True,
   }
 ]
 styles_columns = [
 {
-"field": "Table",
-"title": "FeatureClass",
-"sortable": True,
+    "field": "Stylename",
+    "title": "Stylename",
+    "sortable": True,
 },
   {
-    "field": "Type", # which is the field's name of data key
-    "title": "Type", # display as the table header's name
+    "field": "Type",
+    "title": "Type",
     "sortable": True,
   },
   {
-    "field": "Stylename",
-    "title": "Stylename",
+    "field": "Table",
+    "title": "FeatureClass",
     "sortable": True,
   },
     {

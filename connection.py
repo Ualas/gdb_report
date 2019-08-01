@@ -51,6 +51,7 @@ def getData(con,report):
                     rs = cur.fetchall()
                     for r in rs:
                         data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
-            except psycopg2.OperationalError: traceback.print_exc()
+            #except psycopg2.OperationalError: traceback.print_exc()
+            except: continue
 
     return(data)
