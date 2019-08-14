@@ -57,7 +57,6 @@ def index():
     con = connectionDB(dbname)
 
     databases_data = getData(con,"databases")
-    pprint(databases_data)
 
     layers_data = getData(con,"layers")
     layers_df = pd.DataFrame(layers_data, columns=['Table','Field', 'Type'])
@@ -69,7 +68,7 @@ def index():
 
     disconnectDB(con)
 
-    return render_template('table.html',data=styles_data, columns=styles_columns, layers_data=layers_data ,layers_columns=layers_columns, databases=databases_data)
+    return render_template('table.html',dbname = dbname, data=styles_data, columns=styles_columns, layers_data=layers_data ,layers_columns=layers_columns, databases=databases_data)
 
 if __name__ == "__main__":
     app.run(debug=True)
