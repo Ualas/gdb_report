@@ -21,7 +21,10 @@ def getData(con,report):
     data = []
     dbtables = []
     dbs = []
+    errors = []
     cur = con.cursor()
+    rasterfeatureclasses = [('basemapextentspoly'),('cone')]
+    typefields = ['type','subtype']
 
     if report == 'databases':
         cur.execute("SELECT datname FROM pg_database WHERE datistemplate = false and datname != 'postgres';")
@@ -42,6 +45,7 @@ def getData(con,report):
             try:
                 if (report == 'styles'):
                     if not ("extent" in table or "cone" in table):
+                        cur = con.cursor()
                         cur.execute("SELECT type,stylename,COUNT(objectid) FROM %s GROUP BY type,stylename" % schema_table)
                         rs = cur.fetchall()
                         for r in rs:
@@ -51,7 +55,18 @@ def getData(con,report):
                     rs = cur.fetchall()
                     for r in rs:
                         data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
+                    if not ("extent" in table or "cone" in table):
+                        if ('type' not in dict(rs) and 'subtype' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "Type/Subtype Missing"})
+                        if ('stylename' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "Stylename Missing"})
+                    elif ("extent" in table or "cone" in table):
+                        if ('ss_id' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "SS_ID Missing"})
+                        if ('ssc_id' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "SSC_ID Missing"})
+                    if ('objectid' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "ObjectID Missing"})
+                    if ('name' not in dict(rs) and 'title' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "Name/Title Missing"})
+                    if ('firstyear' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "ObjectID Missing"})
+                    if ('lastyear' not in dict(rs)): errors.append({"Table" : table[:-4] ,"error" : "ObjectID Missing"})
             #except psycopg2.OperationalError: traceback.print_exc()
             except: continue
+    print(errors)
 
     return(data)
