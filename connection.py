@@ -22,12 +22,11 @@ def getData(con):
     layers_data = []
     styles_data = []
     databases_data = []
+    rasters_data = []
     dbtables = []
-    dbs = []
     styles_layers = []
+    rasters_layers = []
     cur = con.cursor()
-    rasterfeatureclasses = [('basemapextentspoly'),('cone')]
-    typefields = ['type','subtype']
 
     cur.execute("SELECT datname FROM pg_database WHERE datistemplate = false and datname != 'postgres';")
     rows = cur.fetchall()
@@ -44,18 +43,17 @@ def getData(con):
         table = row['table']
         schema = row['schema']
         schema_table = schema + "." + table
-        try:
-            cur.execute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '%s' AND table_schema = '%s'" % (table, schema))
-            rs = cur.fetchall()
-            for r in rs:
-                layers_data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
-                if (('type' in dict(rs) or 'subtype' in dict(rs)) and 'stylename' in dict(rs)):
-                        styles_layers.append(schema_table)
-
-        except psycopg2.OperationalError: traceback.print_exc()
-        #except: continue
+        cur.execute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '%s' AND table_schema = '%s'" % (table, schema))
+        rs = cur.fetchall()
+        for r in rs:
+            layers_data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
+            if (('type' in dict(rs) or 'subtype' in dict(rs)) and 'stylename' in dict(rs)):
+                    styles_layers.append(schema_table)
+        if ("extents" in table or "cone" in table) and ("land" not in table or "basemap" not in table):
+            rasters_layers.append(schema_table)
 
     styles_layers = list(set([i for i in styles_layers]))
+
     for i in styles_layers:
         cur = con.cursor()
         cur.execute("SELECT type,stylename,COUNT(objectid) FROM %s GROUP BY type,stylename" % i)
@@ -63,5 +61,11 @@ def getData(con):
         for r in rs:
             styles_data.append({"Table" : row['table'][:-4], "Type" : r[0], "Stylename" : r[1], "Count" : r[2]})
 
+    for i in rasters_layers:
+        cur = con.cursor()
+        cur.execute("SELECT ss_id,ssc_id,notes,title,creator,firstyear,lastyear FROM %s" % i)
+        rs = cur.fetchall()
+        for r in rs:
+            rasters_data.append({"Table" : row['table'][:-4], "SS ID" : r[0], "SSC ID" : r[1], "Notes" : r[2], "Title" : r[3], "Creator" : r[3], "FirstYear" : r[4], "LastYear" : r[5]})
 
-    return(databases_data, layers_data, styles_data)
+    return(databases_data, layers_data, styles_data, rasters_data)
