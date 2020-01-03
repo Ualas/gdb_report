@@ -56,13 +56,13 @@ def index():
 
     con = connectionDB(dbname)
 
-    databases_data = getData(con,"databases")
+    databases_data, layers_data, styles_data = getData(con)
 
-    layers_data = getData(con,"layers")
+    #layers_data = getData(con,"layers")
     layers_df = pd.DataFrame(layers_data, columns=['Table','Field', 'Type'])
     layers_df.set_index(['Table'], inplace=True)
 
-    styles_data = getData(con,"styles")
+    #styles_data = getData(con,"styles")
     styles_df = pd.DataFrame(styles_data, columns=['Table','Type', 'Stylename', 'Count'])
     styles_df.set_index(['Table'], inplace=True)
 
