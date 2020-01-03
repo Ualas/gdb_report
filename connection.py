@@ -13,6 +13,7 @@ DBPASS = os.getenv('DBPASS')
 def connectionDB(dbname):
     con = psycopg2.connect(database=dbname, user=DBUSER, password=DBPASS, host=DBHOST, port='5432')
     con.set_client_encoding('UTF8')
+    connectionDB.dbname = dbname
     return(con)
 
 def disconnectDB(con):
@@ -49,23 +50,26 @@ def getData(con):
             layers_data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
             if (('type' in dict(rs) or 'subtype' in dict(rs)) and 'stylename' in dict(rs)):
                     styles_layers.append(schema_table)
-        if ("extents" in table or "cone" in table) and ("land" not in table or "basemap" not in table):
+        if ("extents" in table or "cone" in table) and ("land" not in table and "basemap" not in table):
             rasters_layers.append(schema_table)
 
     styles_layers = list(set([i for i in styles_layers]))
 
     for i in styles_layers:
         cur = con.cursor()
-        cur.execute("SELECT type,stylename,COUNT(objectid) FROM %s GROUP BY type,stylename" % i)
+        if "brasilia" in connectionDB.dbname or "rice" in connectionDB.dbname:
+            cur.execute("SELECT subtype,stylename,COUNT(shape) FROM %s GROUP BY subtype,stylename" % i)
+        else:
+            cur.execute("SELECT type,stylename,COUNT(objectid) FROM %s GROUP BY type,stylename" % i)
         rs = cur.fetchall()
         for r in rs:
-            styles_data.append({"Table" : row['table'][:-4], "Type" : r[0], "Stylename" : r[1], "Count" : r[2]})
+            styles_data.append({"Table" : i[:-4], "Type" : r[0], "Stylename" : r[1], "Count" : r[2]})
 
     for i in rasters_layers:
         cur = con.cursor()
         cur.execute("SELECT ss_id,ssc_id,notes,title,creator,firstyear,lastyear FROM %s" % i)
         rs = cur.fetchall()
         for r in rs:
-            rasters_data.append({"Table" : row['table'][:-4], "SS ID" : r[0], "SSC ID" : r[1], "Notes" : r[2], "Title" : r[3], "Creator" : r[3], "FirstYear" : r[4], "LastYear" : r[5]})
+            rasters_data.append({"Table" : i[:-4], "SS ID" : r[0], "SSC ID" : r[1], "Notes" : r[2], "Title" : r[3], "Creator" : r[4], "FirstYear" : r[5], "LastYear" : r[6]})
 
     return(databases_data, layers_data, styles_data, rasters_data)

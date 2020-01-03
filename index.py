@@ -47,7 +47,48 @@ styles_columns = [
       "sortable": True,
     }
 ]
-
+rasters_columns = [
+{
+    "field": "Table",
+    "title": "Table",
+    "sortable": True,
+},
+  {
+    "field": "SS ID",
+    "title": "SS ID",
+    "sortable": True,
+  },
+  {
+    "field": "SSC ID",
+    "title": "SSC ID",
+    "sortable": True,
+  },
+    {
+      "field": "Notes",
+      "title": "Notes",
+      "sortable": True,
+    },
+    {
+    "field": "Title",
+    "title": "Title",
+    "sortable": True,
+    },
+    {
+    "field": "Creator",
+    "title": "Creator",
+    "sortable": True,
+    },
+    {
+      "field": "FirstYear",
+      "title": "FirstYear",
+      "sortable": True,
+    },
+    {
+      "field": "LastYear",
+      "title": "LastYear",
+      "sortable": True,
+    }
+]
 @app.route('/')
 def index():
     dbname = request.args.get('db')
@@ -56,19 +97,20 @@ def index():
 
     con = connectionDB(dbname)
 
-    databases_data, layers_data, styles_data = getData(con)
+    databases_data, layers_data, styles_data, rasters_data = getData(con)
 
-    #layers_data = getData(con,"layers")
     layers_df = pd.DataFrame(layers_data, columns=['Table','Field', 'Type'])
     layers_df.set_index(['Table'], inplace=True)
 
-    #styles_data = getData(con,"styles")
     styles_df = pd.DataFrame(styles_data, columns=['Table','Type', 'Stylename', 'Count'])
     styles_df.set_index(['Table'], inplace=True)
 
+    rasters_df = pd.DataFrame(rasters_data, columns=['Table','SS ID', 'SSC ID', 'Notes', 'Title', 'Creator', 'FirstYear', 'LastYear'])
+    rasters_df.set_index(['Table'], inplace=True)
+
     disconnectDB(con)
 
-    return render_template('table.html',dbname = dbname, data=styles_data, columns=styles_columns, layers_data=layers_data ,layers_columns=layers_columns, databases=databases_data)
+    return render_template('table.html',dbname = dbname, data=styles_data, columns=styles_columns, layers_data=layers_data ,layers_columns=layers_columns, databases=databases_data, rasters_data=rasters_data, rasters_columns = rasters_columns)
 
 if __name__ == "__main__":
     app.run(debug=True)

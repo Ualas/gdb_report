@@ -39,6 +39,16 @@
         });
       });
     });
+    $(window).on('load', function() {
+      var rasters_data = {{rasters_data|tojson}};
+      var rasters_columns = {{rasters_columns|tojson}};
+      $(function() {
+        $('#rasters_table').bootstrapTable({
+          data: rasters_data,
+          columns: rasters_columns,
+        });
+      });
+    });
   </script>
 </head>
 <body>
@@ -73,6 +83,19 @@
                 data-height="500">
               </table>
         </div>
+        <div class="col">
+              <center><h3>Rasters</h3></center>
+              <div id="toolbar" style="padding-right: 15px;"></div>
+                <table
+                  id="rasters_table"
+                  data-toggle="true"
+                  data-toolbar="#toolbar"
+                  data-search="true"
+                  data-show-columns="true"
+                  data-pagination="false"
+                  data-height="500">
+                </table>
+          </div>
       </div>
       <div clas="row" style="margin-top: 50px;">
         <center>
