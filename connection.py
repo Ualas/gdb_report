@@ -47,7 +47,22 @@ def getData(con):
         cur.execute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '%s' AND table_schema = '%s'" % (table, schema))
         rs = cur.fetchall()
         for r in rs:
-            layers_data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : r[1]})
+            arcgis_type = []
+            if r[1] == "integer":
+                arcgis_type = "Object ID"
+            elif r[1] == "character varying":
+                arcgis_type = "Text"
+            elif r[1] == "smallint":
+                arcgis_type = "Short"
+            elif "timestamp" in r[1]:
+                arcgis_type = "Date"
+            elif r[1] == "bigint":
+                arcgis_type = "Long"
+            elif r[1] == "numeric":
+                arcgis_type = "Double"
+            else:
+                arcgis_type = r[1]
+            layers_data.append({"Table" : table[:-4] ,"Field" : r[0], "Type" : arcgis_type})
             if (('type' in dict(rs) or 'subtype' in dict(rs)) and 'stylename' in dict(rs)):
                     styles_layers.append(schema_table)
         if ("extents" in table or "cone" in table) and ("land" not in table and "basemap" not in table):

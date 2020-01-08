@@ -50,7 +50,7 @@ styles_columns = [
 rasters_columns = [
 {
     "field": "Table",
-    "title": "Table",
+    "title": "FeatureClass",
     "sortable": True,
 },
   {
