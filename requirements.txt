@@ -44,7 +44,7 @@ fs-s3fs==1.1.0
 funcsigs==1.0.2
 future==0.17.1
 GDAL==2.4.0
-httplib2==0.9.2
+httplib2==0.18.0
 hypothesis==3.46.1
 idna==2.8
 idna-ssl==1.1.0
