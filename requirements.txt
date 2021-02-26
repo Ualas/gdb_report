@@ -1,6 +1,6 @@
 acme==0.31.0
 affine==2.2.2
-aiohttp==3.5.4
+aiohttp==3.7.4
 airtable-local-backup==0.1a1
 -e git://github.com/gtalarico/airtable-python-wrapper.git@48b2d806178085b52a31817571e5a1fc3dce4045#egg=airtable_python_wrapper
 alabaster==0.7.12
