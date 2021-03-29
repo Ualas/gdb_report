@@ -96,7 +96,7 @@ pycparser==2.18
 pycrypto==2.6.1
 pycups==1.9.73
 pyflakes==1.6.0
-Pygments==2.4.0
+Pygments==2.7.4
 pygobject==3.26.1
 PyICU==1.9.8
 PyJWT==1.5.3
