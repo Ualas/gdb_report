@@ -65,7 +65,7 @@ lazr.uri==1.0.3
 Loris==2.3.3
 louis==3.5.0
 macaroonbakery==1.1.3
-Mako==1.0.7
+Mako==1.2.2
 mapbox==0.16.1
 mapboxcli==0.8.0
 MarkupSafe==1.1.1
