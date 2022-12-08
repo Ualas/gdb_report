@@ -18,7 +18,7 @@ Brlapi==0.6.6
 CacheControl==0.12.5
 certbot==0.31.0
 certbot-nginx==0.31.0
-certifi==2019.6.16
+certifi==2022.12.7
 cffi==1.11.5
 chardet==3.0.4
 Click==7.0
